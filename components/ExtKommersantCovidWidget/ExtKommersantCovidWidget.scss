@@ -1,0 +1,135 @@
+.covid-stats-widget-wrapper {
+  max-width: 600px;
+  font-family: Arial, sans-serif;
+}
+
+.covid-stats-widget {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  border: 1px solid #999;
+}
+
+.covid-stats-widget__header {
+  font-size: 18px;
+  color: #333;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 15px;
+  white-space: nowrap;
+}
+
+.covid-stats-widget__caption {
+  vertical-align: middle;
+  display: inline-block;
+  white-space: initial;
+  max-width: 80%;
+}
+
+.covid-stats-widget__virus-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.covid-stats-widget__tabs {
+  width: 100%;
+  border: 1px solid #006697;
+  overflow: hidden;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+}
+
+.covid-stats-widget__tab {
+  width: 33.33%;
+  text-align: center;
+  box-sizing: unset;
+  padding: 9px 0;
+  font-size: 16px;
+  color: #666;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.covid-stats-widget__tab.covid-stats-widget__tab_active {
+  background-color: #006697;
+  color: #fff;
+}
+
+.covid-stats-widget__body {
+  display: flex;
+  align-items: stretch;
+}
+
+.covid-stats-widget__column {
+  width: 33.33%;
+  text-align: center;
+}
+
+.covid-stats-widget__column-header {
+  color: #666;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+.covid-stats-widget__column-content {
+  padding: 14px 10px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.covid-stats-widget__column-content-header {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.covid-stats-widget__column_infected .covid-stats-widget__column-content {
+  background-color: #e98e89;
+}
+
+.covid-stats-widget__column_recovered .covid-stats-widget__column-content {
+  background-color: #8eb3ca;
+}
+
+.covid-stats-widget__column_dead .covid-stats-widget__column-content {
+  background-color: #666;
+}
+
+.covid-stats-widget-extra {
+  font-size: 13px;
+}
+
+.covid-stats-widget-extra__updated-at {
+  text-align: center;
+  padding: 5px 0;
+  color: #b3b3b3;
+}
+
+.covid-stats-widget-extra__details-link-contaier {
+  text-align: center;
+}
+
+.covid-stats-widget-extra__details-link {
+  text-decoration: none;
+  color: #006697;
+  font-weight: bold;
+}
+
+@media (max-width: 350px) {
+  .covid-stats-widget__tab {
+    font-size: 14px;
+  }
+
+  .covid-stats-widget__column-header {
+    font-size: 11px;
+  }
+
+  .covid-stats-widget__column-content {
+    font-size: 12px;
+  }
+}
