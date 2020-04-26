@@ -40,8 +40,8 @@ interface ICovidWidgetState {
 }
 
 interface ICovidWidgetProps {
-    ['link-to-details']: string;
-    ['data-source-url']: string;
+    'data-link-to-details': string;
+    'data-source-url': string;
 }
 
 enum Tab {
@@ -50,32 +50,34 @@ enum Tab {
     Moscow = 'Moscow',
 }
 
-const separateThousands = (target: number): string => target.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '&nbsp;');
+const separateThousands = (target: number): string => target.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
 
 export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps, ICovidWidgetState> {
-    private get lastUpdate(): string | null {
-        const { allStats } = this.state as ICovidWidgetState;
-        if (allStats) {
-            return allStats.UpdatedAt || allStats.CreatedAt;
-        }
-        return null;
-    }
-
     public state = {
         allStats: null,
         activeTab: Tab.Russia
     }
 
-    public async componentDidMount(): Promise<void> {
+    private get lastUpdate(): string | null {
+        const { allStats } = this.state as ICovidWidgetState;
+        return allStats ? allStats.UpdatedAt || allStats.CreatedAt : null;
+    }
+
+    public constructor(props: ICovidWidgetProps) {
+        super(props);
+        this.handleTabSwitch = this.handleTabSwitch.bind(this);
+    }
+
+    public componentDidMount(): void {
         try {
-            await this.fetchStats();
+            this.fetchStats().then(stats => {
+                this.setState({
+                    allStats: stats
+                });
+            });
         } catch (e) {
             console.error(e.message);
         }
-    }
-
-    public shouldComponentUpdate(nextProps: ICovidWidgetProps, nextState: ICovidWidgetState): boolean {
-        return this.state.activeTab !== nextState.activeTab;
     }
 
     public render(): React.ReactNode {
@@ -88,7 +90,7 @@ export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps,
                 <div className="covid-stats-widget-wrapper">
                     <div className="covid-stats-widget">
                         <div className="covid-stats-widget__header">
-                            <div className="covid-stats-widget__virus-icon" />
+                            <div className="covid-stats-widget__virus-icon" style={{ backgroundImage: 'url(https://im.kommersant.ru/ContentFlex/images/virus_icon.svg)' }} />
                             <div className="covid-stats-widget__caption">Статистика по коронавирусу COVID-19</div>
                         </div>
                         <div className="covid-stats-widget__tabs">
@@ -96,27 +98,29 @@ export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps,
                             <div className={`covid-stats-widget__tab ${this.state.activeTab === Tab.Russia ? 'covid-stats-widget__tab_active' : ''}`} data-tab={Tab.Russia} onClick={this.handleTabSwitch}>Россия</div>
                             <div className={`covid-stats-widget__tab ${this.state.activeTab === Tab.Moscow ? 'covid-stats-widget__tab_active' : ''}`} data-tab={Tab.Moscow} onClick={this.handleTabSwitch}>Москва</div>
                         </div>
+                        <div className="covid-stats-widget__subheaders">
+                            <div className="covid-stats-widget__column-subheader">Заболели</div>
+                            <div className="covid-stats-widget__column-subheader">Выздоровели</div>
+                            <div className="covid-stats-widget__column-subheader">Умерли</div>
+                        </div>
                         <div className="covid-stats-widget__body">
                             <div className="covid-stats-widget__column covid-stats-widget__column_infected">
-                                <div className="covid-stats-widget__column-header">Заболели</div>
                                 <div className="covid-stats-widget__column-content">
-                                    <div className="covid-stats-widget__column-content-header">{separateThousands(tabStats.Infected)}</div>
+                                    <div className="covid-stats-widget__column-content-header">{separateThousands(tabStats.Infected)} чел.</div>
                                     <div>+{separateThousands(tabStats.InfectedDiff)}</div>
                                     <div>(за сутки)</div>
                                 </div>
                             </div>
                             <div className="covid-stats-widget__column covid-stats-widget__column_recovered">
-                                <div className="covid-stats-widget__column-header">Выздоровели</div>
                                 <div className="covid-stats-widget__column-content">
-                                    <div className="covid-stats-widget__column-content-header">{separateThousands(tabStats.Recovered)}</div>
+                                    <div className="covid-stats-widget__column-content-header">{separateThousands(tabStats.Recovered)} чел.</div>
                                     <div>+{separateThousands(tabStats.RecoveredDiff)}</div>
                                     <div>(за сутки)</div>
                                 </div>
                             </div>
                             <div className="covid-stats-widget__column covid-stats-widget__column_dead">
-                                <div className="covid-stats-widget__column-header">Умерли</div>
                                 <div className="covid-stats-widget__column-content">
-                                    <div className="covid-stats-widget__column-content-header">{separateThousands(tabStats.Dead)}</div>
+                                    <div className="covid-stats-widget__column-content-header">{separateThousands(tabStats.Dead)} чел.</div>
                                     <div>+{separateThousands(tabStats.DeadDiff)}</div>
                                     <div>(за сутки)</div>
                                 </div>
@@ -130,7 +134,7 @@ export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps,
                             </div>
                         ) : ''}
                         <div className="covid-stats-widget-extra__details-link-contaier">
-                            <a className="covid-stats-widget-extra__details-link" href={this.props['link-to-details']}>Вся статистика, графики и карты</a>
+                            <a className="covid-stats-widget-extra__details-link" href={this.props['data-link-to-details']}>Вся статистика, графики и карты</a>
                         </div>
                     </div>
                 </div>
@@ -139,14 +143,14 @@ export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps,
         return null;
     }
 
-    private async fetchStats(): Promise<void> {
+    private fetchStats(): Promise<ICovidStats> {
         if (typeof window === 'undefined') {
             throw new Error('Window is not defined');
         } else {
-            const response = await (await fetch(this.props['data-source-url'])).json();
-            const [allStats] = response.data;
-            this.setState({
-                allStats
+            return new Promise(resolve => {
+                fetch(this.props['data-source-url'])
+                    .then((result: Response) => result.json())
+                    .then(parsed => resolve(parsed.data[0]));
             });
         }
     }
@@ -174,9 +178,9 @@ export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps,
 
     private handleTabSwitch(event: React.MouseEvent<HTMLDivElement>): void {
         const target = event.target as HTMLDivElement;
-        const tab = target.getAttribute('data-tab');
+        const tab = target.getAttribute('data-tab') as Tab;
         if (tab) {
-            this.switchTabTo(tab as Tab);
+            this.switchTabTo(tab);
         }
     }
 
