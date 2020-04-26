@@ -1,5 +1,7 @@
 import * as React from 'react';
 import './ExtKommersantCovidWidget.scss';
+import { separateThousands } from './utils/values';
+import { getLocaleDate, getLocaleTime } from './utils/date';
 
 interface ICovidStats {
     Date: string;
@@ -49,8 +51,6 @@ enum Tab {
     Russia = 'Russia',
     Moscow = 'Moscow',
 }
-
-const separateThousands = (target: number): string => target.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
 
 export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps, ICovidWidgetState> {
     public state = {
@@ -168,12 +168,11 @@ export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps,
     }
 
     private getLastUpdateDate(): string | null {
-        return this.lastUpdate ? new Date(this.lastUpdate).toLocaleDateString() : null;
+        return this.lastUpdate ? getLocaleDate(this.lastUpdate) : null;
     }
 
     private getLastUpdateTime(): string | null {
-        const convertOptions: {[index: string]: string} = { hour: '2-digit', minute: '2-digit' };
-        return this.lastUpdate ? new Date(this.lastUpdate).toLocaleTimeString([], convertOptions) : null;
+        return this.lastUpdate ? getLocaleTime(this.lastUpdate) : null;
     }
 
     private handleTabSwitch(event: React.MouseEvent<HTMLDivElement>): void {
