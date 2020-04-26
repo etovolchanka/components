@@ -30,6 +30,10 @@
   width: 40px;
   height: 40px;
   margin-right: 10px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .covid-stats-widget__tabs {
@@ -69,23 +73,34 @@
   text-align: center;
 }
 
-.covid-stats-widget__column-header {
+.covid-stats-widget__subheaders {
+  display: flex;
+  align-items: stretch;
+}
+
+.covid-stats-widget__column-subheader {
   color: #666;
   font-size: 14px;
   font-weight: bold;
   padding: 10px 0;
+  width: 33.33%;
+  text-align: center;
 }
 
 .covid-stats-widget__column-content {
   padding: 14px 10px;
   color: #fff;
   font-size: 14px;
+  line-height: 14px;
+  box-sizing: border-box;
+  height: 100%;
 }
 
 .covid-stats-widget__column-content-header {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   font-size: 16px;
+  line-height: 18px;
 }
 
 .covid-stats-widget__column_infected .covid-stats-widget__column-content {
@@ -120,16 +135,28 @@
   font-weight: bold;
 }
 
-@media (max-width: 350px) {
-  .covid-stats-widget__tab {
-    font-size: 14px;
-  }
-
-  .covid-stats-widget__column-header {
-    font-size: 11px;
+@media (max-width: 414px) {
+  .covid-stats-widget__column-content-header {
+    font-size: 13px;
+    line-height: 15px;
   }
 
   .covid-stats-widget__column-content {
     font-size: 12px;
   }
 }
+
+@media (max-width: 350px) {
+  .covid-stats-widget__tab {
+    font-size: 13px;
+  }
+
+  .covid-stats-widget__column-content-header, .covid-stats-widget__column-subheader {
+    font-size: 11px;
+  }
+
+  .covid-stats-widget__column-content {
+    padding: 10px 5px;
+  }
+}
+
