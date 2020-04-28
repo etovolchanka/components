@@ -53,7 +53,7 @@ enum Tab {
 }
 
 export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps, ICovidWidgetState> {
-    public state = {
+    public readonly state = {
         allStats: null,
         activeTab: Tab.Russia
     }
