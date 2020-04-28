@@ -1,10 +1,20 @@
-function getLocaleDate(ISOString: string): string {
-    return new Date(ISOString).toLocaleDateString();
+function toDoubleDigitFormat(value: number): string {
+    return `0${value}`.slice(-2);
 }
 
-function getLocaleTime(ISOString: string): string {
-    const convertOptions: {[index: string]: string} = { hour: '2-digit', minute: '2-digit' };
-    return new Date(ISOString).toLocaleTimeString([], convertOptions);
+function getDate(ISOString: string): string {
+    const date = new Date(ISOString);
+    const day = toDoubleDigitFormat(date.getDate());
+    const month = toDoubleDigitFormat(date.getMonth() + 1);
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
 }
 
-export { getLocaleDate, getLocaleTime };
+function getTime(ISOString: string): string {
+    const date = new Date(ISOString);
+    const hours = toDoubleDigitFormat(date.getHours());
+    const minutes = toDoubleDigitFormat(date.getMinutes());
+    return `${hours}:${minutes}`;
+}
+
+export { getDate, getTime };

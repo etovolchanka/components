@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './ExtKommersantCovidWidget.scss';
 import { separateThousands } from './utils/values';
-import { getLocaleDate, getLocaleTime } from './utils/date';
+import { getDate, getTime } from './utils/date';
 
 interface ICovidStats {
     Date: string;
@@ -168,11 +168,11 @@ export class ExtKommersantCovidWidget extends React.Component<ICovidWidgetProps,
     }
 
     private getLastUpdateDate(): string | null {
-        return this.lastUpdate ? getLocaleDate(this.lastUpdate) : null;
+        return this.lastUpdate ? getDate(this.lastUpdate) : null;
     }
 
     private getLastUpdateTime(): string | null {
-        return this.lastUpdate ? getLocaleTime(this.lastUpdate) : null;
+        return this.lastUpdate ? getTime(this.lastUpdate) : null;
     }
 
     private handleTabSwitch(event: React.MouseEvent<HTMLDivElement>): void {

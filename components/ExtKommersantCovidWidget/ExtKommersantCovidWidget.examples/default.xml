@@ -1,4 +1,4 @@
 <ExtKommersantCovidWidget
-        data-link-to-details="https://www.kommersant.ru/doc/4314405?from=turbo_widget"
+        data-link-to-details="https://www.kommersant.ru/doc/4314405"
         data-source-url="https://wt.kommersant.ru/api/v1/catalog/get?catalogid=134&amp;sorters=id;desc&amp;limit=1"
 />
